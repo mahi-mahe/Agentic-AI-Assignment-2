@@ -1,0 +1,102 @@
+{
+  "suite": "Assignment 2 security regression (offline)",
+  "passed": 15,
+  "total": 15,
+  "accuracy_percent": 100.0,
+  "mean_test_latency_seconds": 0.163417,
+  "max_test_latency_seconds": 1.950174,
+  "llm_tokens": 0,
+  "token_note": "Offline deterministic tests; no LLM call. Live API token counts are recorded in traces when the provider returns usage.",
+  "results": [
+    {
+      "test": "1. Student can authenticate with own credentials",
+      "passed": true,
+      "latency_seconds": 0.155322,
+      "evidence": "True"
+    },
+    {
+      "test": "2. Wrong password is rejected",
+      "passed": true,
+      "latency_seconds": 0.178322,
+      "evidence": "False"
+    },
+    {
+      "test": "3. Own fee record allowed",
+      "passed": true,
+      "latency_seconds": 0.023106,
+      "evidence": "{'found': True, 'student_id': 'S1004', 'name': 'Mahi', 'total_fee': 223000, 'paid': 150000, 'due_date': '2026-10-15', 'pending': 73000}"
+    },
+    {
+      "test": "4. Own scholarship record allowed",
+      "passed": true,
+      "latency_seconds": 0.014607,
+      "evidence": "{'student_id': 'S1004', 'name': 'Mahi', 'scholarship_name': 'Merit-cum-Means Scholarship', 'amount': 20000, 'status': 'Under Review', 'academic_year': '2026-27', 'remarks': 'Illustrative status; submit income and academic documents'}"
+    },
+    {
+      "test": "5. Other student's fee record blocked in tool code",
+      "passed": true,
+      "latency_seconds": 0.01406,
+      "evidence": "{'found': False, 'blocked': True, 'message': 'Access denied: you may view only your own fee record.'}"
+    },
+    {
+      "test": "6. Other student's scholarship record blocked in tool code",
+      "passed": true,
+      "latency_seconds": 0.013384,
+      "evidence": "{'found': False, 'blocked': True, 'message': 'Access denied: you may view only your own scholarship record.'}"
+    },
+    {
+      "test": "7. Student cannot authorize cross-student access",
+      "passed": true,
+      "latency_seconds": 0.014137,
+      "evidence": "False"
+    },
+    {
+      "test": "8. Sensitive due-date change queues approval only",
+      "passed": true,
+      "latency_seconds": 0.027983,
+      "evidence": "{'ok': True, 'status': 'Pending approval', 'request_id': 1, 'message': 'Request #1 submitted. The fee due date has NOT been changed; an authorized administrator must review it.'}"
+    },
+    {
+      "test": "9. Rejected approval does not execute change",
+      "passed": true,
+      "latency_seconds": 0.028532,
+      "evidence": "{'ok': True, 'status': 'Rejected', 'message': 'No change executed; request rejected by administrator.'}"
+    },
+    {
+      "test": "10. Approved request executes only after human review",
+      "passed": true,
+      "latency_seconds": 0.027651,
+      "evidence": "{'ok': True, 'status': 'Approved', 'message': 'Fee due date updated after administrator approval.'}"
+    },
+    {
+      "test": "11. OTP/password message is not persisted in profile memory",
+      "passed": true,
+      "latency_seconds": 1.950174,
+      "evidence": "('I’m sorry, but I can’t process or store that kind of personal security information. For your safety, please keep OTPs and passwords private and never share them in messages. If you need help with an account‑related issue, let me know the nature of the problem (e.g., trouble logging in, a payment error, etc.) and I’ll guide you on the appropriate steps.', {'timestamp': '2026-10-31T23:02:58', 'query': '[message omitted; trace stores no raw chat text]', 'tools_used': [], 'retrieved_evidence': [{'"
+    },
+    {
+      "test": "12. Trace file does not contain supplied OTP/password",
+      "passed": true,
+      "latency_seconds": 1e-05,
+      "evidence": "{\"timestamp\": \"2026-10-31T13:36:51\", \"query\": \"[message omitted; trace stores no raw chat text]\", \"tools_used\": [], \"retrieved_evidence\": [{\"heading\": \"Fee payment and portal downtime\", \"score\": 1}, {\"heading\": \"Fee records and privacy\", \"score\": 1}, {\"heading\": \"Scholarships\", \"score\": 1}], \"latency_seconds\": 0.001, \"prompt_tokens\": 0, \"completion_tokens\": 0, \"total_tokens\": 0, \"status\": \"offline_deterministic\", \"authenticated_student\": \"S1004\"}\n{\"timestamp\": \"2026-10-31T13:37:13\", \"query\": \"[m"
+    },
+    {
+      "test": "13. Audit records contain deny and approval/rejection evidence",
+      "passed": true,
+      "latency_seconds": 0.001219,
+      "evidence": "[{'audit_id': 9, 'timestamp': '2026-10-31T17:32:58.486942+00:00', 'actor_id': 'ADMIN', 'actor_role': 'admin', 'action': 'review_approval', 'target_id': 'S1004', 'allowed': 1, 'approval_status': 'Approved', 'result': 'Fee due date updated after administrator approval.', 'details': '{\"request_id\": 2, \"action_type\": \"fee_due_date_change\"}'}, {'audit_id': 8, 'timestamp': '2026-10-31T17:32:58.458062+00:00', 'actor_id': 'S1004', 'actor_role': 'student', 'action': 'request_fee_due_date_change', 'target"
+    },
+    {
+      "test": "14. Assignment 1 exam/timetable/calendar tools remain available",
+      "passed": true,
+      "latency_seconds": 0.002322,
+      "evidence": "({'semester': 'semester 1', 'exams': [{'subject': 'Python Programming', 'date': '2026-11-10', 'time': '10:00 AM', 'venue': 'Hall A'}, {'subject': 'Statistics', 'date': '2026-11-13', 'time': '10:00 AM', 'venue': 'Hall B'}, {'subject': 'Database Management', 'date': '2026-11-17', 'time': '02:00 PM', 'venue': 'Hall A'}]}, {'semester': 'semester 2', 'day': 'monday', 'classes': [{'period': '09:00-10:00', 'subject': 'Machine Learning'}, {'period': '10:15-11:15', 'subject': 'Data Visualization'}, {'per"
+    },
+    {
+      "test": "15. Handbook retrieval remains available",
+      "passed": true,
+      "latency_seconds": 0.000432,
+      "evidence": "[{'score': 4, 'text': '## Fee payment and portal downtime\\n1. Students should retain the payment reference, timestamp, and a screenshot or other evidence of a failed transaction.\\n2. A student should raise a fee-support ticket before the published due date when the payment portal fails.\\n3. Portal failure does **not automatically extend** the payment deadline.\\n4. Any extension or permission to pay on the next working day requires written confirmation from the Accounts Office.\\n5. The support ag"
+    }
+  ]
+}
